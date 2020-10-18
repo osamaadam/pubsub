@@ -1,4 +1,4 @@
-targets = server
+targets = main
 
 cppComp = $(CROSS_TOOL)g++
 
