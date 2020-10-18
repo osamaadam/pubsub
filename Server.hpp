@@ -1,3 +1,7 @@
+#include <chrono>
+#include <ctime>
+#include <thread>
+
 #include "includes.hpp"
 
 class Server {
@@ -12,24 +16,15 @@ class Server {
   }
 
   void listen(int clientSocket) {
-    char buffer[4096];
+    using namespace std::chrono_literals;
+    using namespace std::this_thread;
+    std::time_t result = std::time(nullptr);
+    char* buffer = strcat(std::asctime(std::localtime(&result)), "\n");
 
     while (true) {
-      memset(buffer, 0, 4096);
-      int byteReceived = recv(clientSocket, buffer, 4096, 0);
-      if (byteReceived == -1) {
-        std::cerr << "Byte not received!\n";
-        break;
-      }
-
-      if (byteReceived == 0) {
-        std::cout << "Client disconnected\n";
-        break;
-      }
-
-      std::cout << "Received: " << std::string(buffer, 0, byteReceived) << "\n";
-
-      send(clientSocket, buffer, byteReceived + 1, 0);
+      sleep_for(1s);
+      send(clientSocket, buffer, strlen(buffer), 0);
+      std::cout << buffer;
     }
   }
 
