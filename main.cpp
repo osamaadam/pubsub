@@ -1,10 +1,3 @@
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-
 #include <iostream>
 #include <string>
 
@@ -13,26 +6,30 @@
 #define PORT 3030
 
 int main() {
-  int listening = socket(AF_INET, SOCK_STREAM, 0);
-  if (listening == 0) {
+  const int listeningSocket = socket(AF_INET, SOCK_STREAM, 0);
+  if (listeningSocket == 0) {
     std::cerr << "Can't create socket\n";
     return -1;
   }
 
-  Server serverObj = Server();
-  sockaddr_in server = serverObj.getServer();
+  Server server = Server();
+  sockaddr_in serverAddress = server.getAddress();
 
-  if (bind(listening, (sockaddr *)&server, sizeof(server)) == -1) {
+  const int boundSocket = bind(listeningSocket, (sockaddr *)&serverAddress, sizeof(serverAddress));
+
+  if (boundSocket == -1) {
     std::cerr << "Can't bind to IP address\n";
     return -1;
   }
 
-  if (listen(listening, SOMAXCONN) == -1) {
+  const int app = listen(listeningSocket, SOMAXCONN);
+
+  if (app == -1) {
     std::cerr << "Can't listen\n";
     return -1;
   }
 
-  Client clientObj = Client(listening);
+  Client clientObj = Client(listeningSocket);
 
   sockaddr_in client = clientObj.getClient();
   char *host = clientObj.getHost();
@@ -49,7 +46,7 @@ int main() {
     std::cout << host << " connected to " << ntohs(client.sin_port) << "\n";
   }
 
-  serverObj.listen(clientSocket);
+  server.listen(clientSocket);
 
   clientObj.closeConnection();
 }

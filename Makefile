@@ -2,7 +2,7 @@ targets = main
 
 cppComp = $(CROSS_TOOL)g++
 
-flags = -Wall -Werror -std=c++17
+flags = -Wall -Werror -std=c++17 -pthread
 
 all: clean $(targets)
 
