@@ -18,13 +18,15 @@ class Server {
   void listen(int clientSocket) {
     using namespace std::chrono_literals;
     using namespace std::this_thread;
-    std::time_t result = std::time(nullptr);
-    char* buffer = strcat(std::asctime(std::localtime(&result)), "\n");
+
+    // char* buffer = strcat(std::asctime(std::localtime(&result)), "\n");
 
     while (true) {
-      sleep_for(1s);
-      send(clientSocket, buffer, strlen(buffer), 0);
-      std::cout << buffer;
+      std::time_t result = std::time(nullptr);
+      // buffer = strcat(std::asctime(std::localtime(&result)), "\n");
+      send(clientSocket, strcat(std::asctime(std::localtime(&result)), "\n"), 26, 0);
+      std::cout << strcat(std::asctime(std::localtime(&result)), "\n");
+      sleep_for(10s);
     }
   }
 

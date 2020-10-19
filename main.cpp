@@ -1,5 +1,3 @@
-#include "Server.hpp"
-
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <string.h>
@@ -11,6 +9,7 @@
 #include <string>
 
 #include "Client.hpp"
+#include "Server.hpp"
 #define PORT 3030
 
 int main() {
